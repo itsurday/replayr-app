@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>List_Path__c</fullName>
+    <label>List Path</label>
+    <description>Response mappings: JSON path to the array whose items each become one record, for example data.orders. Empty means the whole response is one record.</description>
+    <inlineHelpText>Path to the list of records in the response, for example data.orders. Leave empty if the response is a single record.</inlineHelpText>
+    <type>Text</type>
+    <length>255</length>
+    <required>false</required>
+    <trackHistory>true</trackHistory>
+</CustomField>

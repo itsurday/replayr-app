@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Retry_Safe__c</fullName>
+    <label>Retry-safe</label>
+    <description>Sending this call twice does no extra harm (idempotent). Allows automatic retry and replay without a warning.</description>
+    <inlineHelpText>Tick only if sending this call twice does no extra harm, for example a PUT that sets a value. Failed calls are then retried automatically.</inlineHelpText>
+    <type>Checkbox</type>
+    <defaultValue>false</defaultValue>
+    <trackHistory>true</trackHistory>
+</CustomField>

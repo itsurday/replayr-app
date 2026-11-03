@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomNotificationType xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customNotifTypeName>Replayr alert</customNotifTypeName>
+    <description>Sent hourly to Replayr Admins when jobs need attention: outcome unknown, retries used up, response not saved, work not moving, or a failed watchdog.</description>
+    <desktop>true</desktop>
+    <masterLabel>Replayr alert</masterLabel>
+    <mobile>true</mobile>
+</CustomNotificationType>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Poller_Last_Run__c</fullName>
+    <label>Poller last run</label>
+    <description>Written by the hourly poller each time its code runs. The health check compares it with the clock instead of trusting the scheduled job's status.</description>
+    <type>DateTime</type>
+    <required>false</required>
+</CustomField>

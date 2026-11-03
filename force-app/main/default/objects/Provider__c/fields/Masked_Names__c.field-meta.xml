@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Masked_Names__c</fullName>
+    <label>Masked names</label>
+    <description>Header names, JSON keys and URL parameters whose values Replayr masks wherever it shows a request or response. Built-in names such as password and token are always masked.</description>
+    <inlineHelpText>Names whose values this API treats as secret, separated by commas or new lines, for example customer_pin, X-Shop-Pin. Matched exactly, ignoring case. Password, token, secret, API key and similar names are always masked. Applies to JSON, form-encoded bodies, URL parameters and headers, not to XML.</inlineHelpText>
+    <type>LongTextArea</type>
+    <length>5000</length>
+    <visibleLines>3</visibleLines>
+    <trackHistory>true</trackHistory>
+</CustomField>

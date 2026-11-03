@@ -1,0 +1,7 @@
+# Snyk policy. archive/ holds Phase 0 and phase 4 spike code: reference only, never deployed or packaged (.forceignore).
+# snyk-reports/ holds Snyk's own reports (scripts/snyk-report.sh)
+version: v1.25.0
+exclude:
+  global:
+    - archive/**
+    - snyk-reports/**

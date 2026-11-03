@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Test_Run__c</fullName>
+    <label>Test run</label>
+    <description>A call sent by test mode, recorded after it returned. Its response was shown, never written into Salesforce. Alerts and usage counts leave these out.</description>
+    <type>Checkbox</type>
+    <defaultValue>false</defaultValue>
+</CustomField>

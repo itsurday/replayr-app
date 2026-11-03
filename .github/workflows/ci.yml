@@ -1,0 +1,218 @@
+# Replayr CI
+# Pull requests to main: Code Analyzer -> fresh scratch org -> deploy -> Apex tests + coverage gate -> delete org.
+# Pushes to main: cut a beta (unpromoted) 2GP package version. Promotion stays human-only.
+# Manual run (Actions -> CI -> Run workflow): set force_full=true to exercise login and scratch org creation
+# before force-app has metadata (smoke test of the CI login).
+#
+# Setup (GitHub repo settings):
+#   Environment "ci" (Settings -> Environments), no branch restriction for now (a "main only" rule may block
+#   pull_request runs from reading secrets; verify on the first PR before tightening). Add secrets:
+#     SF_DEVHUB_USERNAME   username of a dedicated CI user in the Dev Hub (not your own login)
+#     SF_DEVHUB_CLIENT_ID  consumer key of the Dev Hub app (Connected App or External Client App) with JWT enabled
+#     SF_DEVHUB_JWT_KEY    private key (PEM) matching the certificate uploaded to that app
+#   Repository variable (optional): SF_ECA_SCRATCH_WORKAROUND = "true" only when the Dev Hub app is an External
+#     Client App, to work around forcedotcom/cli#3515 (scratch org creation fails with C-1016). Before enabling it,
+#     set SF_ECA_PLUGIN_VERSION to an exact version (never a tag); remove both once that issue is fixed.
+
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      force_full:
+        description: Run login, scratch org and tests even if force-app has no metadata
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  # Never cancel a run on main: it may be cutting a package version.
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+env:
+  SF_CLI_VERSION: 2.153.5
+  CODE_ANALYZER_VERSION: 5.16.0
+  MIN_COVERAGE: 75
+  TARGET_COVERAGE: 90
+
+jobs:
+  validate:
+    if: github.event_name != 'push'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    environment: ci
+    env:
+      FORCE_FULL: ${{ inputs.force_full }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+
+      - name: Check whether the package has metadata yet
+        id: content
+        run: |
+          if find force-app -type f ! -name '.gitkeep' | grep -q . || [ "$FORCE_FULL" = "true" ]; then
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "run=false" >> "$GITHUB_OUTPUT"
+            echo "force-app has no metadata yet: skipping Salesforce steps."
+          fi
+
+      - name: Check whether a Dev Hub login is configured
+        id: login
+        env:
+          SF_DEVHUB_USERNAME: ${{ secrets.SF_DEVHUB_USERNAME }}
+          SF_DEVHUB_CLIENT_ID: ${{ secrets.SF_DEVHUB_CLIENT_ID }}
+          SF_DEVHUB_JWT_KEY: ${{ secrets.SF_DEVHUB_JWT_KEY }}
+        run: |
+          if [ -n "$SF_DEVHUB_USERNAME" ] && [ -n "$SF_DEVHUB_CLIENT_ID" ] && [ -n "$SF_DEVHUB_JWT_KEY" ]; then
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::No Dev Hub login configured (option 5, archive/ci-login-options.md): skipping scratch org, deploy and tests."
+          fi
+
+      - name: Install Salesforce CLI and Code Analyzer
+        if: steps.content.outputs.run == 'true'
+        run: |
+          npm install --global "@salesforce/cli@${SF_CLI_VERSION}"
+          sf plugins install "code-analyzer@${CODE_ANALYZER_VERSION}"
+
+      - name: ECA scratch-org workaround (forcedotcom/cli#3515)
+        if: steps.content.outputs.run == 'true' && steps.login.outputs.ready == 'true' && vars.SF_ECA_SCRATCH_WORKAROUND == 'true'
+        env:
+          SF_ECA_PLUGIN_VERSION: ${{ vars.SF_ECA_PLUGIN_VERSION }}
+        run: |
+          if [ -z "$SF_ECA_PLUGIN_VERSION" ]; then echo "Set SF_ECA_PLUGIN_VERSION to an exact version"; exit 1; fi
+          sf plugins install "@salesforce/plugin-org@${SF_ECA_PLUGIN_VERSION}"
+          echo "SF_SCRATCH_SIGNUP_CONNECTED_APP=PlatformCLI" >> "$GITHUB_ENV"
+
+      - name: Code Analyzer
+        if: steps.content.outputs.run == 'true'
+        run: sf code-analyzer run --target force-app --severity-threshold 2 --view table
+
+      # Exact versions from package-lock.json; no install scripts, which these tools don't need
+      - name: Lint and unit-test Lightning web components
+        if: steps.content.outputs.run == 'true'
+        run: |
+          npm ci --ignore-scripts --no-fund --no-audit
+          npm run lint
+          npm run test:unit:coverage
+
+      - name: Authenticate Dev Hub (JWT)
+        if: steps.content.outputs.run == 'true' && steps.login.outputs.ready == 'true'
+        env:
+          SF_DEVHUB_USERNAME: ${{ secrets.SF_DEVHUB_USERNAME }}
+          SF_DEVHUB_CLIENT_ID: ${{ secrets.SF_DEVHUB_CLIENT_ID }}
+          SF_DEVHUB_JWT_KEY: ${{ secrets.SF_DEVHUB_JWT_KEY }}
+        run: |
+          umask 077
+          printf '%s\n' "$SF_DEVHUB_JWT_KEY" > "$RUNNER_TEMP/server.key"
+          sf org login jwt --client-id "$SF_DEVHUB_CLIENT_ID" --jwt-key-file "$RUNNER_TEMP/server.key" \
+            --username "$SF_DEVHUB_USERNAME" --alias dev-hub --set-default-dev-hub
+
+      - name: Create scratch org
+        if: steps.content.outputs.run == 'true' && steps.login.outputs.ready == 'true'
+        run: sf org create scratch --definition-file config/project-scratch-def.json --alias ci --duration-days 1 --wait 20 --target-dev-hub dev-hub
+
+      - name: Deploy
+        if: steps.content.outputs.run == 'true' && steps.login.outputs.ready == 'true'
+        # Package metadata only: dev/ holds test credentials that need an ordered, manual deploy (see docs/dev-setup.md)
+        run: sf project deploy start --source-dir force-app --target-org ci --wait 30
+
+      - name: Apex tests and coverage gate
+        if: steps.content.outputs.run == 'true' && steps.login.outputs.ready == 'true'
+        run: |
+          sf apex run test --target-org ci --test-level RunLocalTests --code-coverage --json --wait 30 > "$RUNNER_TEMP/tests.json" || true
+          if [ ! -s "$RUNNER_TEMP/tests.json" ]; then echo "sf apex run test produced no output"; exit 1; fi
+          node -e '
+            const r = JSON.parse(require("fs").readFileSync(process.argv[1], "utf8")).result || {};
+            const s = r.summary || {};
+            console.log(`Tests: ${s.testsRan} ran, ${s.passing} passed, ${s.failing} failed; org-wide coverage ${s.orgWideCoverage}`);
+            for (const t of (r.tests || []).filter((t) => t.Outcome !== "Pass")) console.log(`FAIL ${t.FullName}: ${t.Message}`);
+            const cov = parseFloat(s.orgWideCoverage);
+            if (s.testsRan > 0 && s.outcome !== "Passed") { console.log("Tests did not pass."); process.exit(1); }
+            if (s.testsRan > 0 && !(cov >= Number(process.env.MIN_COVERAGE))) { console.log(`Coverage below ${process.env.MIN_COVERAGE}%.`); process.exit(1); }
+            if (cov < Number(process.env.TARGET_COVERAGE)) console.log(`::warning::Coverage ${cov}% is below the ${process.env.TARGET_COVERAGE}% target.`);
+          ' "$RUNNER_TEMP/tests.json"
+
+      - name: Delete scratch org
+        if: always() && steps.content.outputs.run == 'true' && steps.login.outputs.ready == 'true'
+        run: sf org delete scratch --target-org ci --no-prompt || echo "No scratch org to delete (it expires in 1 day)."
+
+      - name: Remove key file
+        if: always()
+        run: rm -f "$RUNNER_TEMP/server.key"
+
+  beta:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    environment: ci
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+
+      - name: Check whether the package has metadata yet
+        id: content
+        run: |
+          if find force-app -type f ! -name '.gitkeep' | grep -q .; then
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "run=false" >> "$GITHUB_OUTPUT"
+            echo "force-app has no metadata yet: no package version to cut."
+          fi
+
+      - name: Check whether a Dev Hub login is configured
+        id: login
+        env:
+          SF_DEVHUB_USERNAME: ${{ secrets.SF_DEVHUB_USERNAME }}
+          SF_DEVHUB_CLIENT_ID: ${{ secrets.SF_DEVHUB_CLIENT_ID }}
+          SF_DEVHUB_JWT_KEY: ${{ secrets.SF_DEVHUB_JWT_KEY }}
+        run: |
+          if [ -n "$SF_DEVHUB_USERNAME" ] && [ -n "$SF_DEVHUB_CLIENT_ID" ] && [ -n "$SF_DEVHUB_JWT_KEY" ]; then
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::No Dev Hub login configured (option 5, archive/ci-login-options.md): no package version will be cut."
+          fi
+
+      - name: Install Salesforce CLI
+        if: steps.content.outputs.run == 'true' && steps.login.outputs.ready == 'true'
+        run: npm install --global "@salesforce/cli@${SF_CLI_VERSION}"
+
+      - name: Authenticate Dev Hub (JWT)
+        if: steps.content.outputs.run == 'true' && steps.login.outputs.ready == 'true'
+        env:
+          SF_DEVHUB_USERNAME: ${{ secrets.SF_DEVHUB_USERNAME }}
+          SF_DEVHUB_CLIENT_ID: ${{ secrets.SF_DEVHUB_CLIENT_ID }}
+          SF_DEVHUB_JWT_KEY: ${{ secrets.SF_DEVHUB_JWT_KEY }}
+        run: |
+          umask 077
+          printf '%s\n' "$SF_DEVHUB_JWT_KEY" > "$RUNNER_TEMP/server.key"
+          sf org login jwt --client-id "$SF_DEVHUB_CLIENT_ID" --jwt-key-file "$RUNNER_TEMP/server.key" \
+            --username "$SF_DEVHUB_USERNAME" --alias dev-hub --set-default-dev-hub
+
+      - name: Create beta package version
+        if: steps.content.outputs.run == 'true' && steps.login.outputs.ready == 'true'
+        run: sf package version create --package Replayr --installation-key-bypass --code-coverage --wait 60 --target-dev-hub dev-hub
+
+      - name: Remove key file
+        if: always()
+        run: rm -f "$RUNNER_TEMP/server.key"

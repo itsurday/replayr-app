@@ -1,0 +1,7 @@
+/* A long body wraps and scrolls inside its box instead of widening the page */
+.replayr-body {
+    white-space: pre-wrap;
+    word-break: break-word;
+    max-height: 24rem;
+    overflow: auto;
+}

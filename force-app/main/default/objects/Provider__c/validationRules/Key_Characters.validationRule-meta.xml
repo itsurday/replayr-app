@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Key_Characters</fullName>
+    <active>true</active>
+    <description>A key is used by flows and imports to find this record in every org, so it holds only characters that can't be mistyped or trimmed away.</description>
+    <errorConditionFormula>AND(NOT(ISBLANK(Key__c)), NOT(REGEX(Key__c, &quot;[A-Za-z0-9][A-Za-z0-9_.-]*&quot;)))</errorConditionFormula>
+    <errorDisplayField>Key__c</errorDisplayField>
+    <errorMessage>Use letters, digits, hyphens, underscores and dots only, starting with a letter or digit, for example shop-orders.</errorMessage>
+</ValidationRule>

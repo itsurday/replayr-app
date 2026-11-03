@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Dev only: the admin guide's run-as file for replayr-dev. The username belongs to this scratch org's integration user; update it when the org is recreated (docs/dev-setup.md) -->
+<PlatformEventSubscriberConfig xmlns="http://soap.sforce.com/2006/04/metadata">
+    <batchSize>2000</batchSize>
+    <masterLabel>ReplayrWorkWaiting</masterLabel>
+    <platformEventConsumer>ReplayrWorkWaitingTrigger</platformEventConsumer>
+    <user>replayr.integration.00dem00000yr3r3mad@example.com</user>
+</PlatformEventSubscriberConfig>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomPermission xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Replay finished Replayr jobs and resolve jobs whose outcome is unknown. Jobs stay read-only otherwise, so the duplicate-risk confirmation cannot be bypassed.</description>
+    <isLicensed>false</isLicensed>
+    <label>Replay and resolve Replayr jobs</label>
+</CustomPermission>

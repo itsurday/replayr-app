@@ -1,0 +1,73 @@
+<template>
+    <section class="slds-m-top_medium slds-is-relative">
+        <h4 class="slds-text-title_bold slds-m-bottom_x-small">Test this endpoint</h4>
+        <p class="slds-m-bottom_small">
+            Preview builds the request without sending it. A Side-effect-free endpoint can then be sent once, as you; its reply is shown to you,
+            masked by the provider's Masked names, but never written to Salesforce.
+        </p>
+        <p class="slds-assistive-text" role="status">{status}</p>
+        <template lwc:if={needsRecord}>
+            <lightning-record-picker
+                label="Record to build the request from"
+                object-api-name={targetObject}
+                onchange={handleRecord}
+                disabled={running}
+            ></lightning-record-picker>
+        </template>
+        <div class="slds-m-top_small">
+            <lightning-button label="Preview" onclick={handlePreview} disabled={cantRun}></lightning-button>
+            <template lwc:if={canSend}>
+                <lightning-button class="slds-m-left_x-small" variant="brand" label="Send a test" onclick={handleSend} disabled={cantRun}></lightning-button>
+            </template>
+        </div>
+        <template lwc:if={running}>
+            <lightning-spinner alternative-text="Running the test" size="small"></lightning-spinner>
+        </template>
+        <template lwc:if={error}>
+            <p class="slds-text-color_error slds-m-top_small" role="alert"><lightning-icon class="slds-m-right_x-small" icon-name="utility:error" variant="error" size="x-small" alternative-text="Error"></lightning-icon>{error}</p>
+        </template>
+
+        <template lwc:if={outcome}>
+            <div class="slds-box slds-m-top_small">
+                <h5 class="slds-text-title_bold">Request (secrets masked)</h5>
+                <p class="slds-text-font_monospace">{requestLine}</p>
+                <template lwc:if={hasHeaders}>
+                    <ul class="slds-text-font_monospace">
+                        <template for:each={headerRows} for:item="header">
+                            <li key={header.key}>{header.text}</li>
+                        </template>
+                    </ul>
+                </template>
+                <template lwc:if={outcome.body}>
+                    <pre class="slds-box slds-theme_shade slds-text-font_monospace replayr-code slds-m-top_x-small">{outcome.body}</pre>
+                </template>
+                <template lwc:elseif={outcome.bodyWithheld}>
+                    <p>{outcome.bodyWithheld}</p>
+                </template>
+                <template lwc:else>
+                    <p>No body.</p>
+                </template>
+                <template lwc:if={sendNote}>
+                    <p class="slds-m-top_x-small">{sendNote}</p>
+                </template>
+
+                <template lwc:if={outcome.sent}>
+                    <h5 class="slds-text-title_bold slds-m-top_medium">Reply (secrets masked)</h5>
+                    <p>{replyLine}</p>
+                    <template lwc:if={outcome.error}>
+                        <p class="slds-text-color_error" role="alert"><lightning-icon class="slds-m-right_x-small" icon-name="utility:error" variant="error" size="x-small" alternative-text="Error"></lightning-icon>{outcome.error}</p>
+                    </template>
+                    <template lwc:if={outcome.responseBody}>
+                        <pre class="slds-box slds-theme_shade slds-text-font_monospace replayr-code slds-m-top_x-small">{outcome.responseBody}</pre>
+                    </template>
+                    <template lwc:elseif={outcome.responseWithheld}>
+                        <p>{outcome.responseWithheld}</p>
+                    </template>
+                    <template lwc:if={outcome.jobId}>
+                        <p class="slds-m-top_x-small">Logged as a test job: Jobs, with Show test runs on.</p>
+                    </template>
+                </template>
+            </div>
+        </template>
+    </section>
+</template>

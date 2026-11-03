@@ -1,0 +1,60 @@
+<template>
+    <template lwc:if={creating}>
+        <lightning-card icon-name="utility:add">
+            <span slot="title" tabindex="-1" lwc:ref="newHeading">New provider</span>
+            <div class="slds-p-horizontal_medium">
+                <p class="slds-m-bottom_small">
+                    Give the API name of the Named Credential your admin set up for this provider (Replayr admin guide).
+                </p>
+                <lightning-record-form
+                    object-api-name={providerObject}
+                    fields={providerFields}
+                    columns="1"
+                    mode="edit"
+                    onsuccess={handleCreated}
+                    oncancel={handleCancelNew}
+                ></lightning-record-form>
+            </div>
+        </lightning-card>
+    </template>
+    <template lwc:elseif={openProvider}>
+        <c-replayr-provider
+            provider={openProvider}
+            can-create-endpoints={canCreateEndpoints}
+            onback={handleBack}
+            onchanged={handleChanged}
+        ></c-replayr-provider>
+    </template>
+    <!-- Hidden, not removed, while a provider is open: its scroll is there on the way back -->
+    <lightning-card class={listClass} icon-name="utility:connected_apps">
+        <span slot="title" tabindex="-1" lwc:ref="listHeading">Providers and endpoints</span>
+        <div slot="actions">
+            <template lwc:if={canCreateProviders}>
+                <lightning-button label="New provider" onclick={handleNew}></lightning-button>
+            </template>
+        </div>
+        <div class="slds-p-horizontal_medium slds-is-relative">
+            <template lwc:if={loading}>
+                <lightning-spinner alternative-text="Reading providers" size="small"></lightning-spinner>
+            </template>
+            <template lwc:if={error}>
+                <p class="slds-text-color_error" role="alert"><lightning-icon class="slds-m-right_x-small" icon-name="utility:error" variant="error" size="x-small" alternative-text="Error"></lightning-icon>{error}</p>
+            </template>
+            <template lwc:if={isEmpty}>
+                <p>No providers yet. A provider is one external system, reached through one Named Credential.</p>
+            </template>
+            <template lwc:if={hasRows}>
+                <lightning-datatable
+                    key-field="id"
+                    data={rows}
+                    columns={columns}
+                    hide-checkbox-column
+                    onrowaction={handleRowAction}
+                ></lightning-datatable>
+                <template lwc:if={cut}>
+                    <p class="slds-m-top_small">Only the first 200 providers are listed.</p>
+                </template>
+            </template>
+        </div>
+    </lightning-card>
+</template>

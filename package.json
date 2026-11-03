@@ -1,0 +1,24 @@
+{
+  "name": "replayr-tooling",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Lint and unit tests for Replayr's Lightning web components; not part of the package",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "lint": "eslint \"force-app/**/lwc/**/*.js\"",
+    "test:unit": "sfdx-lwc-jest",
+    "test:unit:coverage": "sfdx-lwc-jest --coverage"
+  },
+  "devDependencies": {
+    "@lwc/eslint-plugin-lwc": "3.5.0",
+    "@sa11y/jest": "8.2.1",
+    "@salesforce/eslint-config-lwc": "4.1.2",
+    "@salesforce/eslint-plugin-lightning": "2.0.0",
+    "@salesforce/sfdx-lwc-jest": "7.9.0",
+    "eslint": "9.39.5",
+    "eslint-plugin-import": "2.32.0",
+    "eslint-plugin-jest": "29.17.0"
+  }
+}

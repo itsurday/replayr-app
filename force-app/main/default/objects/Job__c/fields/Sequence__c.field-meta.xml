@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Sequence__c</fullName>
+    <label>Sequence</label>
+    <description>Creation order. Workers sort claimed jobs by this in code, because ORDER BY is not allowed with FOR UPDATE.</description>
+    <type>AutoNumber</type>
+    <displayFormat>{0}</displayFormat>
+</CustomField>

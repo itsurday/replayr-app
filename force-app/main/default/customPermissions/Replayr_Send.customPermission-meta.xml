@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomPermission xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Send records to an external API through Replayr, for example from a record-triggered flow. Needed by every user whose changes fire a Replayr flow.</description>
+    <isLicensed>false</isLicensed>
+    <label>Send records with Replayr</label>
+</CustomPermission>

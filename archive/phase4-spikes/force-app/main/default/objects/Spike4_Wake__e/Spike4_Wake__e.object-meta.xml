@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <deploymentStatus>Deployed</deploymentStatus>
+    <description>Spike P4.1: a platform event with no custom fields, published after commit.</description>
+    <eventType>HighVolume</eventType>
+    <label>Spike4 Wake</label>
+    <pluralLabel>Spike4 Wakes</pluralLabel>
+    <publishBehavior>PublishAfterCommit</publishBehavior>
+</CustomObject>

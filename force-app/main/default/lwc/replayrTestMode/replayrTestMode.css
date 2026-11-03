@@ -1,0 +1,7 @@
+/* Bodies wrap and scroll inside their box instead of widening the page */
+.replayr-code {
+    white-space: pre-wrap;
+    word-break: break-word;
+    max-height: 18rem;
+    overflow: auto;
+}

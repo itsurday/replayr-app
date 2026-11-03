@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label>Mapping</label>
+    <pluralLabel>Mappings</pluralLabel>
+    <description>How an endpoint's request is built from a record, or how its response is written to records. Rules are JSON, validated by Replayr before use.</description>
+    <nameField>
+        <label>Mapping Number</label>
+        <type>AutoNumber</type>
+        <displayFormat>MAP-{0000}</displayFormat>
+        <startingNumber>1</startingNumber>
+    </nameField>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <sharingModel>ControlledByParent</sharingModel>
+    <externalSharingModel>ControlledByParent</externalSharingModel>
+    <enableReports>true</enableReports>
+    <enableHistory>true</enableHistory>
+</CustomObject>

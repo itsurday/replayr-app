@@ -1,0 +1,2 @@
+# Spike project: deploys everything under force-app (the repo-level .forceignore excludes archive/)
+**/.sf

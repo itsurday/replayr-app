@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Endpoint__c</fullName>
+    <label>Endpoint</label>
+    <description>The endpoint this mapping belongs to.</description>
+    <type>MasterDetail</type>
+    <referenceTo>Endpoint__c</referenceTo>
+    <relationshipName>Mappings</relationshipName>
+    <relationshipLabel>Mappings</relationshipLabel>
+    <relationshipOrder>0</relationshipOrder>
+    <reparentableMasterDetail>false</reparentableMasterDetail>
+    <writeRequiresMasterRead>false</writeRequiresMasterRead>
+</CustomField>

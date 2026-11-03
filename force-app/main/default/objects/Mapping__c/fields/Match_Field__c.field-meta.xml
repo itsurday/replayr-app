@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Match_Field__c</fullName>
+    <label>Match Field</label>
+    <description>Response mappings with Update or Upsert: API name of the field used to find the existing record. Any field, not only an External ID.</description>
+    <inlineHelpText>API name of the field that identifies an existing record, for example Email or Order_Number__c.</inlineHelpText>
+    <type>Text</type>
+    <length>80</length>
+    <required>false</required>
+    <trackHistory>true</trackHistory>
+</CustomField>

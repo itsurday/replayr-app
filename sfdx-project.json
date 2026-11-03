@@ -1,0 +1,30 @@
+{
+  "packageDirectories": [
+    {
+      "versionName": "ver 0.1",
+      "versionNumber": "0.1.0.NEXT",
+      "path": "force-app",
+      "default": true,
+      "package": "Replayr",
+      "definitionFile": "config/project-scratch-def.json",
+      "versionDescription": "Replayr: no-code external API integrations for Salesforce admins, with reliable logging and safe replay."
+    },
+    {
+      "path": "dev",
+      "default": false
+    }
+  ],
+  "name": "replayr",
+  "namespace": "replayr",
+  "sfdcLoginUrl": "https://login.salesforce.com",
+  "sourceApiVersion": "68.0",
+  "packageAliases": {
+    "Replayr": "0Hofn0000001Z29CAE",
+    "Replayr@0.1.0-1": "04tfn000007uSlZAAU",
+    "Replayr@0.1.0-2": "04tfn000007v4MDAAY",
+    "Replayr@0.1.0-3": "04tfn000007v6ZJAAY",
+    "Replayr@0.1.0-4": "04tfn000007v6kbAAA",
+    "Replayr@0.1.0-5": "04tfn000007v7NJAAY",
+    "Replayr@0.1.0-6": "04tfn000007v7YbAAI"
+  }
+}

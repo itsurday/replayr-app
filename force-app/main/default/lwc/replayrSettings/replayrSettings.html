@@ -1,0 +1,55 @@
+<template>
+    <lightning-card title="Settings and setup" icon-name="utility:settings">
+        <div class="slds-p-horizontal_medium">
+            <template lwc:if={error}>
+                <p class="slds-text-color_error" role="alert"><lightning-icon class="slds-m-right_x-small" icon-name="utility:error" variant="error" size="x-small" alternative-text="Error"></lightning-icon>{error}</p>
+            </template>
+            <template lwc:if={settings}>
+                <section class="slds-border_bottom slds-p-bottom_medium slds-m-bottom_medium">
+                    <h3 class="slds-text-heading_small slds-m-bottom_x-small">Keeping finished jobs</h3>
+                    <!-- A two- or three-digit number: a narrow box, not the card's full width -->
+                    <div class="slds-size_1-of-1 slds-medium-size_1-of-3">
+                        <lightning-input
+                            lwc:ref="days"
+                            type="number"
+                            step="1"
+                            label="Days to keep finished jobs and their logs"
+                            value={days}
+                            min={settings.minRetentionDays}
+                            max={settings.maxRetentionDays}
+                            field-level-help={rangeHelp}
+                            onchange={handleDays}
+                        ></lightning-input>
+                    </div>
+                    <template lwc:if={saveError}>
+                        <p class="slds-text-color_error slds-m-top_x-small" role="alert"><lightning-icon class="slds-m-right_x-small" icon-name="utility:error" variant="error" size="x-small" alternative-text="Error"></lightning-icon>{saveError}</p>
+                    </template>
+                    <lightning-button class="slds-m-top_small" label="Save" onclick={handleSave} disabled={saving}></lightning-button>
+                    <p class="slds-m-top_x-small" role="status">{saveStatus}</p>
+                </section>
+
+                <section class="slds-border_bottom slds-p-bottom_medium slds-m-bottom_medium">
+                    <h3 class="slds-text-heading_small slds-m-bottom_x-small">Background work</h3>
+                    <p class="slds-m-bottom_small">
+                        Jobs are sent by the integration user, in the background. Once the run-as setup below is done, set it off once; it also schedules the
+                        hourly poller. It is safe to press again.
+                    </p>
+                    <lightning-button label="Start background work" onclick={handleStart} disabled={starting}></lightning-button>
+                    <p class="slds-m-top_x-small" role="status">{startStatus}</p>
+                    <template lwc:if={startError}>
+                        <p class="slds-text-color_error" role="alert"><lightning-icon class="slds-m-right_x-small" icon-name="utility:error" variant="error" size="x-small" alternative-text="Error"></lightning-icon>{startError}</p>
+                    </template>
+                </section>
+            </template>
+
+            <section>
+                <h3 class="slds-text-heading_small slds-m-bottom_x-small">Setting Replayr up</h3>
+                <ol class="slds-list_ordered">
+                    <template for:each={steps} for:item="step">
+                        <li key={step.key} class="slds-m-bottom_xx-small">{step.text}</li>
+                    </template>
+                </ol>
+            </section>
+        </div>
+    </lightning-card>
+</template>

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <description>Saves a Replayr job for the record; Replayr sends it in the background, with retries and a log.</description>
+        <name>Send_with_Replayr</name>
+        <label>Send with Replayr</label>
+        <locationX>308</locationX>
+        <locationY>276</locationY>
+        <actionName>SendWithReplayr</actionName>
+        <actionType>apex</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>endpointKey</name>
+            <value>
+                <elementReference>EndpointKey</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>recordId</name>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputParameters>
+        <nameSegment>SendWithReplayr</nameSegment>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
+    <apiVersion>68.0</apiVersion>
+    <constants>
+        <description>The Key of the Replayr endpoint to send to. Replace it with your endpoint's Key, and tick "Allow sending from flows and the API" on that endpoint.</description>
+        <name>EndpointKey</name>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>your-endpoint-key</stringValue>
+        </value>
+    </constants>
+    <description>Replayr template: sends each new Account to a Replayr endpoint. To use it, save a copy, change the object if you need to, set EndpointKey to your endpoint's Key and activate the copy. The send runs on the Run Asynchronously path, so a problem never undoes the user's save. Users who create records need the Replayr Sender permission set.</description>
+    <environments>Default</environments>
+    <interviewLabel>Replayr: send when created {!$Flow.CurrentDateTime}</interviewLabel>
+    <isTemplate>true</isTemplate>
+    <label>Replayr template: send a record when it is created</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Name</field>
+            <operator>IsNull</operator>
+            <value>
+                <booleanValue>false</booleanValue>
+            </value>
+        </filters>
+        <object>Account</object>
+        <recordTriggerType>Create</recordTriggerType>
+        <scheduledPaths>
+            <name>Send_in_the_background</name>
+            <connector>
+                <targetReference>Send_with_Replayr</targetReference>
+            </connector>
+            <pathType>AsyncAfterCommit</pathType>
+        </scheduledPaths>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Draft</status>
+</Flow>

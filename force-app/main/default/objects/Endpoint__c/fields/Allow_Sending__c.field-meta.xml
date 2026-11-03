@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Allow_Sending__c</fullName>
+    <label>Allow sending from flows and the API</label>
+    <description>Only endpoints with this ticked can be used by the Send with Replayr action, from a flow or called through the API. Off by default, so no endpoint can be reached by everyone who may send until an admin chooses it.</description>
+    <inlineHelpText>Tick for endpoints that flows send records to. Anyone with the Replayr Sender permission set can then send any record they can see to this endpoint, with the endpoint's Request mapping.</inlineHelpText>
+    <type>Checkbox</type>
+    <defaultValue>false</defaultValue>
+    <trackHistory>true</trackHistory>
+</CustomField>

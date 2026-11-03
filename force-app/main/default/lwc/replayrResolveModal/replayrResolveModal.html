@@ -1,0 +1,29 @@
+<template>
+    <lightning-modal-header label={heading}></lightning-modal-header>
+    <lightning-modal-body>
+        <p class="slds-m-bottom_small">
+            Check with the other system first. A job whose retries were used up can only be resolved as Failed.
+        </p>
+        <lightning-radio-group
+            name="outcome"
+            label="How did it end?"
+            options={options}
+            value={outcome}
+            onchange={handleOutcome}
+            required
+        ></lightning-radio-group>
+        <lightning-textarea
+            lwc:ref="note"
+            class="slds-m-top_small"
+            label="Why"
+            value={note}
+            max-length={noteLimit}
+            onchange={handleNote}
+            required
+        ></lightning-textarea>
+    </lightning-modal-body>
+    <lightning-modal-footer>
+        <lightning-button label="Cancel" onclick={handleCancel}></lightning-button>
+        <lightning-button class="slds-m-left_x-small" variant="brand" label="Resolve" onclick={handleResolve}></lightning-button>
+    </lightning-modal-footer>
+</template>

@@ -1,0 +1,72 @@
+<template>
+    <div class="slds-box slds-m-bottom_medium slds-is-relative">
+        <h4 class="slds-text-title_bold slds-m-bottom_x-small" tabindex="-1" lwc:ref="heading">{heading}</h4>
+        <p class="slds-m-bottom_small">How the reply is written to records: each item becomes or updates one record, filled by the rules below.</p>
+        <p class="slds-assistive-text" role="status">{status}</p>
+
+        <div class="slds-grid slds-gutters_small slds-wrap">
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                <lightning-input label="Object" placeholder="Account" value={targetObject} onchange={handleObject} required></lightning-input>
+            </div>
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                <lightning-combobox label="Operation" options={operations} value={operation} onchange={handleOperation} required></lightning-combobox>
+            </div>
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                <lightning-input
+                    label="Match Field"
+                    value={matchField}
+                    onchange={handleMatchField}
+                    field-level-help="The field that finds the record to update, for example AccountNumber. Leave blank for an Update to write back to the record that was sent."
+                ></lightning-input>
+            </div>
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                <lightning-input
+                    label="List Path"
+                    value={listPath}
+                    onchange={handleListPath}
+                    field-level-help="Where the list of items is in the reply, for example data.items. Leave blank when the whole reply is one item."
+                ></lightning-input>
+            </div>
+        </div>
+
+        <h5 class="slds-text-title_bold slds-m-top_medium slds-m-bottom_x-small">Rules</h5>
+        <template for:each={tableRows} for:item="row">
+            <div key={row.key} class="slds-grid slds-gutters_small slds-grid_vertical-align-end slds-m-bottom_x-small">
+                <div class="slds-col">
+                    <lightning-input label={row.fieldLabel} placeholder="Phone" value={row.field} data-key={row.key} data-part="field" onchange={handleRowChange}></lightning-input>
+                </div>
+                <div class="slds-col">
+                    <lightning-input label={row.pathLabel} placeholder="contact.phone" value={row.path} data-key={row.key} data-part="path" onchange={handleRowChange}></lightning-input>
+                </div>
+                <div class="slds-col slds-grow-none">
+                    <lightning-button-icon icon-name="utility:delete" alternative-text={row.removeLabel} data-key={row.key} onclick={handleRemoveRow}></lightning-button-icon>
+                </div>
+            </div>
+        </template>
+        <lightning-button lwc:ref="addRule" label="Add a rule" icon-name="utility:add" onclick={handleAddRow}></lightning-button>
+
+        <h5 class="slds-text-title_bold slds-m-top_medium slds-m-bottom_x-small">Propose rules from a sample reply</h5>
+        <lightning-textarea label="Sample reply (JSON)" value={sample} onchange={handleSample}></lightning-textarea>
+        <lightning-button class="slds-m-top_x-small" label="Propose rules" onclick={handlePropose} disabled={proposing}></lightning-button>
+        <template lwc:if={hasCandidates}>
+            <lightning-radio-group
+                class="slds-m-top_small"
+                name="listPathCandidates"
+                label="Several lists were found: which one's items become records?"
+                options={candidateOptions}
+                onchange={handleCandidate}
+            ></lightning-radio-group>
+        </template>
+        <template lwc:if={unmatchedText}>
+            <p class="slds-m-top_x-small">{unmatchedText}</p>
+        </template>
+
+        <template lwc:if={error}>
+            <p class="slds-text-color_error slds-m-top_small" role="alert"><lightning-icon class="slds-m-right_x-small" icon-name="utility:error" variant="error" size="x-small" alternative-text="Error"></lightning-icon>{error}</p>
+        </template>
+        <div class="slds-m-top_medium">
+            <lightning-button label="Cancel" onclick={handleCancel}></lightning-button>
+            <lightning-button class="slds-m-left_x-small" variant="brand" label="Save" onclick={handleSave} disabled={cantSave}></lightning-button>
+        </div>
+    </div>
+</template>

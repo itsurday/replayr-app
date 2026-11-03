@@ -1,0 +1,67 @@
+<template>
+    <template lwc:if={openJob}>
+        <c-replayr-job-detail job-id={openJob.id} onback={handleBack}></c-replayr-job-detail>
+    </template>
+    <!-- Hidden, not removed, while a job is open: its scroll, selection and pages are there on the way back -->
+    <lightning-card class={listClass} icon-name="utility:list">
+        <span slot="title" tabindex="-1" lwc:ref="listHeading">Jobs</span>
+        <div slot="actions">
+            <lightning-button label={replayLabel} onclick={handleReplay} disabled={nothingSelected}></lightning-button>
+            <lightning-button class="slds-m-left_x-small" label={resolveLabel} onclick={handleResolve} disabled={nothingSelected}></lightning-button>
+            <lightning-button class="slds-m-left_x-small" label="Refresh" onclick={handleRefresh} disabled={cantReload}></lightning-button>
+        </div>
+        <p class="slds-assistive-text" role="status">{status}</p>
+        <div class="slds-p-horizontal_medium slds-is-relative">
+            <div class="slds-grid slds-gutters_small slds-wrap slds-m-bottom_small">
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3">
+                    <lightning-combobox label="Show" options={filters} value={filter} onchange={handleFilter}></lightning-combobox>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3">
+                    <lightning-record-picker
+                        label="Endpoint"
+                        placeholder="All endpoints"
+                        object-api-name={endpointObject}
+                        onchange={handleEndpoint}
+                    ></lightning-record-picker>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3 slds-align-bottom">
+                    <lightning-input
+                        type="toggle"
+                        label="Show test runs"
+                        checked={includeTestRuns}
+                        message-toggle-active="On"
+                        message-toggle-inactive="Off"
+                        onchange={handleTestRuns}
+                    ></lightning-input>
+                </div>
+            </div>
+            <template lwc:if={loading}>
+                <lightning-spinner alternative-text="Reading jobs" size="small"></lightning-spinner>
+            </template>
+            <template lwc:if={error}>
+                <p class="slds-text-color_error" role="alert"><lightning-icon class="slds-m-right_x-small" icon-name="utility:error" variant="error" size="x-small" alternative-text="Error"></lightning-icon>{error}</p>
+            </template>
+            <template lwc:if={isEmpty}>
+                <p class="slds-text-align_center slds-text-color_weak slds-p-vertical_large">No jobs to show. To see others, change Show or Endpoint, or turn on Show test runs.</p>
+            </template>
+            <template lwc:if={hasRows}>
+                <h3 class="slds-assistive-text">Jobs, newest first</h3>
+                <p class="slds-text-color_weak slds-text-body_small slds-m-bottom_x-small">Select up to {maxSelected} jobs to replay or resolve at once.</p>
+                <lightning-datatable
+                    key-field="id"
+                    data={rows}
+                    columns={columns}
+                    max-row-selection={maxSelected}
+                    selected-rows={selectedIds}
+                    onrowselection={handleSelection}
+                    onrowaction={handleRowAction}
+                ></lightning-datatable>
+            </template>
+            <template lwc:if={hasMore}>
+                <div class="slds-m-top_small slds-text-align_center">
+                    <lightning-button label="Load more" onclick={handleMore} disabled={cantReload}></lightning-button>
+                </div>
+            </template>
+        </div>
+    </lightning-card>
+</template>

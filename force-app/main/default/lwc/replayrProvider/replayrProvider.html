@@ -1,0 +1,94 @@
+<template>
+    <lightning-card icon-name="utility:connected_apps">
+        <span slot="title" tabindex="-1" lwc:ref="heading">{heading}</span>
+        <div slot="actions">
+            <lightning-button label={backLabel} icon-name="utility:back" onclick={handleBack}></lightning-button>
+            <template lwc:if={showProvider}>
+                <lightning-button class="slds-m-left_x-small" label="Check this provider" onclick={handleCheck} disabled={checking}></lightning-button>
+                <template lwc:if={canCreateEndpoints}>
+                    <lightning-button class="slds-m-left_x-small" label="New endpoint" onclick={handleNewEndpoint}></lightning-button>
+                </template>
+            </template>
+        </div>
+        <div class="slds-p-horizontal_medium">
+            <template lwc:if={creatingEndpoint}>
+                <lightning-record-edit-form
+                    lwc:ref="endpointForm"
+                    object-api-name={endpointObject}
+                    onsubmit={handleEndpointSubmit}
+                    onsuccess={handleEndpointCreated}
+                >
+                    <lightning-messages></lightning-messages>
+                    <!-- The provider is fixed: this one. Shown only; handleEndpointSubmit adds it, as a disabled field may not be sent -->
+                    <lightning-input-field field-name={providerField} value={provider.id} disabled></lightning-input-field>
+                    <template for:each={endpointFields} for:item="field">
+                        <lightning-input-field key={field.fieldApiName} field-name={field.fieldApiName}></lightning-input-field>
+                    </template>
+                    <div class="slds-m-vertical_small">
+                        <lightning-button label="Cancel" onclick={handleBack}></lightning-button>
+                        <lightning-button class="slds-m-left_x-small" variant="brand" type="submit" label="Save"></lightning-button>
+                    </div>
+                </lightning-record-edit-form>
+            </template>
+            <template lwc:elseif={openEndpointId}>
+                <lightning-record-form
+                    record-id={openEndpointId}
+                    object-api-name={endpointObject}
+                    fields={endpointFields}
+                    columns="2"
+                    mode="view"
+                    onsuccess={handleSaved}
+                ></lightning-record-form>
+                <c-replayr-mappings endpoint-id={openEndpointId}></c-replayr-mappings>
+            </template>
+            <template lwc:else>
+                <p class="slds-assistive-text" role="status">{checkStatus}</p>
+                <template lwc:if={checking}>
+                    <lightning-spinner alternative-text="Checking the provider" size="small"></lightning-spinner>
+                </template>
+                <template lwc:if={checkError}>
+                    <p class="slds-text-color_error slds-m-bottom_small" role="alert"><lightning-icon class="slds-m-right_x-small" icon-name="utility:error" variant="error" size="x-small" alternative-text="Error"></lightning-icon>{checkError}</p>
+                </template>
+                <template lwc:if={check}>
+                    <div class="slds-box slds-m-bottom_medium">
+                        <h3 class="slds-text-heading_small slds-m-bottom_x-small">Check of this provider</h3>
+                        <template lwc:if={check.message}>
+                            <p>{check.message}</p>
+                        </template>
+                        <ul>
+                            <template for:each={findings} for:item="finding">
+                                <li key={finding.key} class="slds-m-bottom_xx-small">
+                                    <lightning-icon icon-name={finding.icon} size="x-small" alternative-text={finding.label} class="slds-m-right_x-small"></lightning-icon>
+                                    {finding.text}
+                                </li>
+                            </template>
+                        </ul>
+                    </div>
+                </template>
+                <lightning-record-form
+                    record-id={provider.id}
+                    object-api-name={providerObject}
+                    fields={providerFields}
+                    columns="2"
+                    mode="view"
+                    onsuccess={handleSaved}
+                ></lightning-record-form>
+                <h3 class="slds-text-heading_small slds-m-vertical_small">Endpoints</h3>
+                <template lwc:if={hasEndpoints}>
+                    <div role="region" aria-label="Endpoints">
+                        <lightning-datatable
+                            key-field="id"
+                            data={provider.endpoints}
+                            columns={endpointColumns}
+                            hide-checkbox-column
+                            onrowaction={handleRowAction}
+                        ></lightning-datatable>
+                    </div>
+                </template>
+                <template lwc:else>
+                    <p class="slds-m-bottom_small">No endpoints yet. An endpoint is one call to this provider: a method and a path.</p>
+                </template>
+            </template>
+        </div>
+    </lightning-card>
+</template>

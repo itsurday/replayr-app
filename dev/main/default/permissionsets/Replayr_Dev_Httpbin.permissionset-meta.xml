@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label>Replayr Dev Test Credentials</label>
+    <description>Dev and test only, not packaged. Lets the running user call out through every test principal: httpbin (Basic, API key, bearer) and the oauth-server org (OAuth). API name kept from when it covered httpbin only.</description>
+    <externalCredentialPrincipalAccesses>
+        <enabled>true</enabled>
+        <!-- The namespaced scratch org prefixes the dev credentials too, and this reference is not resolved without it -->
+        <externalCredentialPrincipal>replayr__Httpbin_Auth-Httpbin_User</externalCredentialPrincipal>
+    </externalCredentialPrincipalAccesses>
+    <externalCredentialPrincipalAccesses>
+        <enabled>true</enabled>
+        <externalCredentialPrincipal>replayr__Httpbin_ApiKey_Auth-ApiKey_User</externalCredentialPrincipal>
+    </externalCredentialPrincipalAccesses>
+    <externalCredentialPrincipalAccesses>
+        <enabled>true</enabled>
+        <externalCredentialPrincipal>replayr__Httpbin_Bearer_Auth-Bearer_User</externalCredentialPrincipal>
+    </externalCredentialPrincipalAccesses>
+    <externalCredentialPrincipalAccesses>
+        <enabled>true</enabled>
+        <externalCredentialPrincipal>replayr__Oauth_Server_Auth-OAuth_User</externalCredentialPrincipal>
+    </externalCredentialPrincipalAccesses>
+    <externalCredentialPrincipalAccesses>
+        <enabled>true</enabled>
+        <externalCredentialPrincipal>replayr__Oauth_Server_Browser_Auth-Browser_User</externalCredentialPrincipal>
+    </externalCredentialPrincipalAccesses>
+    <hasActivationRequired>false</hasActivationRequired>
+    <objectPermissions>
+        <object>UserExternalCredential</object>
+        <allowCreate>false</allowCreate>
+        <allowRead>true</allowRead>
+        <allowEdit>false</allowEdit>
+        <allowDelete>false</allowDelete>
+        <viewAllRecords>false</viewAllRecords>
+        <modifyAllRecords>false</modifyAllRecords>
+    </objectPermissions>
+</PermissionSet>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Side_Effect_Free__c</fullName>
+    <label>Side-effect-free</label>
+    <description>The call changes nothing on the remote side. Only then does test mode actually send it.</description>
+    <inlineHelpText>Tick only if this call changes nothing on the remote side, for example a lookup. Test mode sends it; otherwise test mode only shows the request.</inlineHelpText>
+    <type>Checkbox</type>
+    <defaultValue>false</defaultValue>
+    <trackHistory>true</trackHistory>
+</CustomField>

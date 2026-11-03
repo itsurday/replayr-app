@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Replayr's PMD changes, loaded by code-analyzer.yml -->
+<ruleset name="Replayr" xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 https://pmd.sourceforge.io/ruleset_2_0_0.xsd">
+    <description>Built-in rules with Replayr's settings</description>
+    <!-- Tests assert through private assert... helpers (assertRejected, assertAllSent), which the rule can't see -->
+    <rule ref="category/apex/bestpractices.xml/ApexUnitTestClassShouldHaveAsserts" name="ReplayrTestsShouldAssert">
+        <properties>
+            <property name="additionalAssertMethodPattern" value="assert\w+" />
+        </properties>
+    </rule>
+</ruleset>

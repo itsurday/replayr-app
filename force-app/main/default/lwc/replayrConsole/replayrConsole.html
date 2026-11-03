@@ -1,0 +1,28 @@
+<template>
+    <div class="slds-grid slds-gutters_small slds-wrap">
+        <nav class="slds-col slds-size_1-of-1 slds-medium-size_1-of-5" aria-label="Replayr console sections">
+            <lightning-vertical-navigation selected-item={section} onselect={handleSelect}>
+                <lightning-vertical-navigation-section label="Replayr">
+                    <lightning-vertical-navigation-item label="Health" name="health"></lightning-vertical-navigation-item>
+                    <lightning-vertical-navigation-item label="Jobs" name="jobs"></lightning-vertical-navigation-item>
+                    <lightning-vertical-navigation-item label="Providers and endpoints" name="setup"></lightning-vertical-navigation-item>
+                    <lightning-vertical-navigation-item label="Settings and setup" name="settings"></lightning-vertical-navigation-item>
+                </lightning-vertical-navigation-section>
+            </lightning-vertical-navigation>
+        </nav>
+        <div class="slds-col slds-size_1-of-1 slds-medium-size_4-of-5">
+            <template lwc:if={showHealth}>
+                <c-replayr-health></c-replayr-health>
+            </template>
+            <template lwc:elseif={showJobs}>
+                <c-replayr-jobs></c-replayr-jobs>
+            </template>
+            <template lwc:elseif={showSetup}>
+                <c-replayr-setup></c-replayr-setup>
+            </template>
+            <template lwc:elseif={showSettings}>
+                <c-replayr-settings></c-replayr-settings>
+            </template>
+        </div>
+    </div>
+</template>

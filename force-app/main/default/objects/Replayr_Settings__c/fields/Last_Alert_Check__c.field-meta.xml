@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Last_Alert_Check__c</fullName>
+    <label>Last alert check</label>
+    <description>When the poller last checked for jobs needing attention. Problems that arise after it are reported in the next alert.</description>
+    <type>DateTime</type>
+    <required>false</required>
+</CustomField>

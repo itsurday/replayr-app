@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label>Replayr Sender</label>
+    <description>Send records through Replayr: assign to every user whose changes fire a Replayr flow. Grants no access to Replayr's configuration or jobs.</description>
+    <classAccesses>
+        <apexClass>SendWithReplayr</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
+    <customPermissions>
+        <enabled>true</enabled>
+        <name>Replayr_Send</name>
+    </customPermissions>
+    <hasActivationRequired>false</hasActivationRequired>
+    <objectPermissions>
+        <object>Replayr_Work_Waiting__e</object>
+        <allowCreate>true</allowCreate>
+        <allowRead>true</allowRead>
+        <allowEdit>false</allowEdit>
+        <allowDelete>false</allowDelete>
+        <viewAllRecords>false</viewAllRecords>
+        <modifyAllRecords>false</modifyAllRecords>
+    </objectPermissions>
+</PermissionSet>

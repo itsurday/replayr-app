@@ -1,0 +1,8 @@
+{
+  "orgName": "Replayr Spikes Professional",
+  "edition": "Professional",
+  "features": ["EnableSetPasswordInApi"],
+  "settings": {
+    "lightningExperienceSettings": { "enableS1DesktopEnabled": true }
+  }
+}

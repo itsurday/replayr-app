@@ -1,0 +1,8 @@
+# Not part of the package
+archive/
+**/.gitkeep
+
+# LWC tooling files
+**/jsconfig.json
+**/.eslintrc.json
+**/__tests__/**

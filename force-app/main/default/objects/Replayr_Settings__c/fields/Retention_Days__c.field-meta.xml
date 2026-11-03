@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Retention_Days__c</fullName>
+    <label>Retention days</label>
+    <description>How long finished jobs and their logs are kept before the daily purge deletes them. Jobs that still need a person are never purged. Blank, 0 or less means 30; there is no "never purge". Set through the Replayr console (the setting is protected).</description>
+    <type>Number</type>
+    <precision>4</precision>
+    <scale>0</scale>
+    <defaultValue>30</defaultValue>
+    <required>false</required>
+</CustomField>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Idempotency_Header_Name</fullName>
+    <active>true</active>
+    <description>A valid HTTP header name (RFC 9110 token characters), and not one Replayr or the platform sets itself. UPPER uses en_US so the check does not depend on the user locale.</description>
+    <errorConditionFormula>AND(
+    NOT(ISBLANK(Idempotency_Header__c)),
+    OR(
+        NOT(REGEX(Idempotency_Header__c, &quot;[A-Za-z0-9!#$%&amp;&apos;*+.^_`|~-]+&quot;)),
+        CONTAINS(&quot;:AUTHORIZATION:CONNECTION:CONTENT-LENGTH:CONTENT-TYPE:COOKIE:EXPECT:HOST:TRANSFER-ENCODING:UPGRADE:&quot;, &quot;:&quot; &amp; UPPER(Idempotency_Header__c, &quot;en_US&quot;) &amp; &quot;:&quot;)
+    )
+)</errorConditionFormula>
+    <errorDisplayField>Idempotency_Header__c</errorDisplayField>
+    <errorMessage>Use a valid header name such as Idempotency-Key, with no spaces or colons. Headers the platform or Replayr sets (Authorization, Content-Type, Content-Length, Host, Connection, Cookie, Expect, Transfer-Encoding, Upgrade) can&apos;t be used.</errorMessage>
+</ValidationRule>

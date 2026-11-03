@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Rules__c</fullName>
+    <label>Rules</label>
+    <description>Request: the JSON body template with {{Field}} merge fields. Response: JSON rules mapping JSON paths to fields. Never contains {! (rejected).</description>
+    <type>LongTextArea</type>
+    <length>131072</length>
+    <visibleLines>15</visibleLines>
+    <trackHistory>true</trackHistory>
+</CustomField>

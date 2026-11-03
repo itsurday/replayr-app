@@ -1,0 +1,68 @@
+<template>
+    <section class="slds-m-top_medium slds-is-relative">
+        <h3 class="slds-text-heading_small slds-m-bottom_x-small">Mappings</h3>
+        <p class="slds-assistive-text" role="status">{status}</p>
+        <template lwc:if={loading}>
+            <lightning-spinner alternative-text="Reading mappings" size="small"></lightning-spinner>
+        </template>
+        <template lwc:if={error}>
+            <p class="slds-text-color_error" role="alert"><lightning-icon class="slds-m-right_x-small" icon-name="utility:error" variant="error" size="x-small" alternative-text="Error"></lightning-icon>{error}</p>
+        </template>
+
+        <template lwc:if={editing}>
+            <div class="slds-box slds-m-bottom_medium">
+                <h4 class="slds-text-title_bold slds-m-bottom_x-small" tabindex="-1" lwc:ref="editorHeading">{editorHeading}</h4>
+                <p class="slds-m-bottom_small">{templateHint}</p>
+                <lightning-input label="Object" placeholder="Account" value={editing.targetObject} onchange={handleObject} required></lightning-input>
+                <lightning-textarea
+                    class="replayr-template slds-m-top_small"
+                    label="Template"
+                    value={editing.template}
+                    onchange={handleTemplate}
+                    required
+                ></lightning-textarea>
+                <template lwc:if={saveError}>
+                    <p class="slds-text-color_error slds-m-top_small" role="alert"><lightning-icon class="slds-m-right_x-small" icon-name="utility:error" variant="error" size="x-small" alternative-text="Error"></lightning-icon>{saveError}</p>
+                </template>
+                <div class="slds-m-top_small">
+                    <lightning-button label="Cancel" onclick={handleCancel}></lightning-button>
+                    <lightning-button class="slds-m-left_x-small" variant="brand" label="Save" onclick={handleSave} disabled={saving}></lightning-button>
+                </div>
+            </div>
+        </template>
+        <template lwc:elseif={editingResponse}>
+            <c-replayr-response-editor
+                mapping={response}
+                endpoint-id={endpointId}
+                onsaved={handleResponseSaved}
+                oncancel={handleResponseCancel}
+            ></c-replayr-response-editor>
+        </template>
+        <template lwc:elseif={loaded}>
+            <h4 class="slds-text-title_bold">Request</h4>
+            <template lwc:if={request}>
+                <p>For {request.targetObject}:</p>
+                <pre class="slds-box slds-theme_shade slds-text-font_monospace replayr-code">{request.rules}</pre>
+            </template>
+            <template lwc:else>
+                <p>No Request mapping: nothing can be sent to this endpoint from a record yet.</p>
+            </template>
+            <template lwc:if={canEdit}>
+                <lightning-button lwc:ref="requestButton" class="slds-m-top_x-small" label={requestButtonLabel} onclick={handleEditRequest}></lightning-button>
+            </template>
+
+            <h4 class="slds-text-title_bold slds-m-top_medium">Response</h4>
+            <template lwc:if={response}>
+                <p>{responseSummary}:</p>
+                <pre class="slds-box slds-theme_shade slds-text-font_monospace replayr-code">{response.rules}</pre>
+            </template>
+            <template lwc:else>
+                <p>No Response mapping: replies are logged but not written to records.</p>
+            </template>
+            <template lwc:if={canEdit}>
+                <lightning-button lwc:ref="responseButton" class="slds-m-top_x-small" label={responseButtonLabel} onclick={handleEditResponse}></lightning-button>
+                <c-replayr-test-mode endpoint-id={endpointId} target-object={requestObject}></c-replayr-test-mode>
+            </template>
+        </template>
+    </section>
+</template>

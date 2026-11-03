@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Path__c</fullName>
+    <label>Path</label>
+    <description>Path appended to the Named Credential's URL. Empty calls the base URL.</description>
+    <inlineHelpText>For example /v1/orders. Leave empty to call the Named Credential's URL itself.</inlineHelpText>
+    <type>Text</type>
+    <length>255</length>
+    <required>false</required>
+    <trackHistory>true</trackHistory>
+</CustomField>

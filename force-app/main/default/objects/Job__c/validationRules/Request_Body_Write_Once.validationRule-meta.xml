@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Request_Body_Write_Once</fullName>
+    <active>true</active>
+    <description>A replay must send exactly what was built, so a job's stored request body never changes once set.</description>
+    <errorConditionFormula>AND(ISCHANGED(Request_Body__c), NOT(ISBLANK(PRIORVALUE(Request_Body__c))))</errorConditionFormula>
+    <errorDisplayField>Request_Body__c</errorDisplayField>
+    <errorMessage>A job's request body can't be changed once it is set: a replay must send exactly what was built.</errorMessage>
+</ValidationRule>

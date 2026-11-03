@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Key__c</fullName>
+    <label>Key</label>
+    <description>A stable name for this endpoint, the same in every org, so flows and imports can refer to it after a deployment from a sandbox (record Ids differ between orgs). Unique, case ignored.</description>
+    <inlineHelpText>A short name that never changes, for example shop-orders. Flows and imports use it to find this endpoint in every org.</inlineHelpText>
+    <type>Text</type>
+    <length>80</length>
+    <externalId>true</externalId>
+    <unique>true</unique>
+    <caseSensitive>false</caseSensitive>
+    <required>false</required>
+    <trackHistory>true</trackHistory>
+</CustomField>

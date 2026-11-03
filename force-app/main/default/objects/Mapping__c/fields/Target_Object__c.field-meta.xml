@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Target_Object__c</fullName>
+    <label>Target Object</label>
+    <description>Response mappings: API name of the object the response is written to, for example Account. Checked against the org's objects before use.</description>
+    <inlineHelpText>API name of the object to write to, for example Account or Order__c.</inlineHelpText>
+    <type>Text</type>
+    <length>80</length>
+    <required>false</required>
+    <trackHistory>true</trackHistory>
+</CustomField>

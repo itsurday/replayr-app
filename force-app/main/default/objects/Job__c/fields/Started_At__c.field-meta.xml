@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Started_At__c</fullName>
+    <label>Started at</label>
+    <description>When the current or latest attempt was claimed. The watchdog uses it to find jobs stuck in Processing.</description>
+    <type>DateTime</type>
+    <required>false</required>
+</CustomField>

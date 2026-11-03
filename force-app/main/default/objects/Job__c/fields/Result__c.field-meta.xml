@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Result__c</fullName>
+    <label>Result</label>
+    <description>Short summary of what happened. Never a full response body, which can echo a secret.</description>
+    <type>Text</type>
+    <length>255</length>
+    <required>false</required>
+</CustomField>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label>Job Log</label>
+    <pluralLabel>Job Logs</pluralLabel>
+    <description>One attempt at a job: its outcome, HTTP status, a short message and duration. Never a request or response body, or a header.</description>
+    <nameField>
+        <label>Log Number</label>
+        <type>AutoNumber</type>
+        <displayFormat>LOG-{000000}</displayFormat>
+        <startingNumber>1</startingNumber>
+    </nameField>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <sharingModel>ControlledByParent</sharingModel>
+    <externalSharingModel>ControlledByParent</externalSharingModel>
+    <enableReports>true</enableReports>
+</CustomObject>

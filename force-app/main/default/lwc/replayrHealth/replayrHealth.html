@@ -1,0 +1,78 @@
+<template>
+    <lightning-card title="Health" icon-name="utility:chart">
+        <lightning-button slot="actions" label="Refresh" onclick={refresh}></lightning-button>
+        <p class="slds-assistive-text" role="status">{status}</p>
+        <div class="slds-p-horizontal_medium slds-is-relative">
+            <template lwc:if={loading}>
+                <lightning-spinner alternative-text="Reading health" size="small"></lightning-spinner>
+            </template>
+            <template lwc:if={error}>
+                <p class="slds-text-color_error" role="alert"><lightning-icon class="slds-m-right_x-small" icon-name="utility:error" variant="error" size="x-small" alternative-text="Error"></lightning-icon>{error}</p>
+            </template>
+            <template lwc:if={health}>
+                <template lwc:if={hasWarnings}>
+                    <div class="slds-scoped-notification slds-media slds-theme_warning slds-m-bottom_medium">
+                        <div class="slds-media__figure">
+                            <lightning-icon icon-name="utility:warning" size="small" alternative-text="Warning"></lightning-icon>
+                        </div>
+                        <div class="slds-media__body">
+                            <h3 class="slds-text-heading_small slds-m-bottom_x-small">Needs attention</h3>
+                            <ul class="slds-list_dotted">
+                                <template for:each={warnings} for:item="warning">
+                                    <li key={warning.key}>{warning.text}</li>
+                                </template>
+                            </ul>
+                        </div>
+                    </div>
+                </template>
+                <template lwc:else>
+                    <div class="slds-scoped-notification slds-media slds-media_center slds-theme_success slds-m-bottom_medium">
+                        <div class="slds-media__figure">
+                            <lightning-icon icon-name="utility:success" size="small" alternative-text="All well"></lightning-icon>
+                        </div>
+                        <div class="slds-media__body">
+                            <p>Replayr's background work is set up and moving.</p>
+                        </div>
+                    </div>
+                </template>
+                <template for:each={groups} for:item="group">
+                    <div key={group.title} class="slds-m-bottom_medium">
+                        <h3 class="slds-text-title_bold slds-m-bottom_x-small">{group.title}</h3>
+                        <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+                            <caption class="slds-assistive-text">{group.title}</caption>
+                            <tbody>
+                                <template for:each={group.rows} for:item="row">
+                                    <tr key={row.key}>
+                                        <th scope="row" class="slds-size_1-of-3">{row.label}</th>
+                                        <td>
+                                            <template lwc:if={row.date}>
+                                                <lightning-formatted-date-time
+                                                    value={row.date}
+                                                    year="numeric"
+                                                    month="short"
+                                                    day="numeric"
+                                                    hour="2-digit"
+                                                    minute="2-digit"
+                                                ></lightning-formatted-date-time>
+                                            </template>
+                                            <template lwc:else>{row.text}</template>
+                                            <template lwc:if={row.attention}>
+                                                <lightning-icon
+                                                    class="slds-m-left_x-small"
+                                                    icon-name="utility:warning"
+                                                    variant="warning"
+                                                    size="x-small"
+                                                    alternative-text="Needs attention"
+                                                ></lightning-icon>
+                                            </template>
+                                        </td>
+                                    </tr>
+                                </template>
+                            </tbody>
+                        </table>
+                    </div>
+                </template>
+            </template>
+        </div>
+    </lightning-card>
+</template>

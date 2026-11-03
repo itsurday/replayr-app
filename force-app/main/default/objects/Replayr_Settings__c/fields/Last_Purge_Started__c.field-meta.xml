@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Last_Purge_Started__c</fullName>
+    <label>Last purge started</label>
+    <description>When the poller last started the daily purge of old finished jobs.</description>
+    <type>DateTime</type>
+    <required>false</required>
+</CustomField>

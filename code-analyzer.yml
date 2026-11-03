@@ -1,0 +1,10 @@
+# Read by `sf code-analyzer run` from the project root (locally, /scan and CI)
+engines:
+  pmd:
+    custom_rulesets:
+      - config/pmd-ruleset.xml
+rules:
+  pmd:
+    # Replaced by ReplayrTestsShouldAssert (config/pmd-ruleset.xml), which also counts assert... helpers
+    ApexUnitTestClassShouldHaveAsserts:
+      disabled: true

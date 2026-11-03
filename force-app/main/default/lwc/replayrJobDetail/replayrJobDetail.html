@@ -1,0 +1,70 @@
+<template>
+    <lightning-card icon-name="utility:record">
+        <!-- The card puts its title in a heading; focusable so opening a job announces it -->
+        <span slot="title" tabindex="-1" lwc:ref="heading">{heading}</span>
+        <div slot="actions">
+            <lightning-button label="Back to jobs" icon-name="utility:back" onclick={handleBack} disabled={busy}></lightning-button>
+            <template lwc:if={canReplay}>
+                <lightning-button class="slds-m-left_x-small" label="Replay" onclick={handleReplay} disabled={busy}></lightning-button>
+            </template>
+            <template lwc:if={canResolve}>
+                <lightning-button class="slds-m-left_x-small" label="Resolve" onclick={handleResolve} disabled={busy}></lightning-button>
+            </template>
+        </div>
+        <div class="slds-p-horizontal_medium slds-is-relative">
+            <template lwc:if={loading}>
+                <lightning-spinner alternative-text="Reading the job" size="small"></lightning-spinner>
+            </template>
+            <template lwc:if={error}>
+                <p class="slds-text-color_error" role="alert"><lightning-icon class="slds-m-right_x-small" icon-name="utility:error" variant="error" size="x-small" alternative-text="Error"></lightning-icon>{error}</p>
+            </template>
+            <template lwc:if={job}>
+                <template lwc:if={showsBoth}>
+                    <p class="slds-m-bottom_small">Replay sends the call again. Resolve only records how it ended: nothing is sent.</p>
+                </template>
+                <dl class="slds-dl_horizontal slds-m-bottom_medium">
+                    <template for:each={fields} for:item="field">
+                        <dt key={field.key} class="slds-dl_horizontal__label">{field.label}</dt>
+                        <dd key={field.valueKey} class="slds-dl_horizontal__detail">
+                            <template lwc:if={field.date}>
+                                <lightning-formatted-date-time
+                                    value={field.date}
+                                    year="numeric"
+                                    month="short"
+                                    day="numeric"
+                                    hour="2-digit"
+                                    minute="2-digit"
+                                ></lightning-formatted-date-time>
+                            </template>
+                            <template lwc:else>{field.text}</template>
+                        </dd>
+                    </template>
+                </dl>
+
+                <h3 class="slds-text-heading_small slds-m-bottom_x-small">Attempts, newest first</h3>
+                <template lwc:if={hasAttempts}>
+                    <div role="region" aria-label="Attempts">
+                        <lightning-datatable
+                            key-field="key"
+                            data={job.attempts}
+                            columns={attemptColumns}
+                            hide-checkbox-column
+                            class="slds-m-bottom_medium"
+                        ></lightning-datatable>
+                    </div>
+                </template>
+                <template lwc:else>
+                    <p class="slds-m-bottom_medium">No attempts yet.</p>
+                </template>
+
+                <h3 class="slds-text-heading_small slds-m-bottom_x-small">Request body (secrets masked)</h3>
+                <template lwc:if={showBody}>
+                    <pre class="slds-box slds-theme_shade slds-text-font_monospace replayr-body">{job.requestBody}</pre>
+                </template>
+                <template lwc:else>
+                    <p>{bodyNote}</p>
+                </template>
+            </template>
+        </div>
+    </lightning-card>
+</template>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Idempotency_Header__c</fullName>
+    <label>Idempotency header</label>
+    <description>Optional header name. When set, each job sends it with a value that stays the same across its retries and replays.</description>
+    <inlineHelpText>For APIs that drop duplicate requests, for example Idempotency-Key. Leave empty if the API has no such header.</inlineHelpText>
+    <type>Text</type>
+    <length>80</length>
+    <required>false</required>
+    <trackHistory>true</trackHistory>
+</CustomField>
