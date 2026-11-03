@@ -18,9 +18,11 @@ Sending data from Salesforce to another system usually goes wrong in quiet ways:
 
 ## See it in action
 
-▶ **[Watch the walkthrough video](docs/media/replayr-walkthrough.mp4).** It sets up Replayr from a fresh org and sends a first record, step by step.
+This 15-minute walkthrough sets up Replayr from a fresh org and sends a first record, step by step.
 
-[![Replayr walkthrough](docs/media/walkthrough-thumbnail.png)](docs/media/replayr-walkthrough.mp4)
+https://github.com/user-attachments/assets/6ac85819-7c89-4524-b27f-886566c71f4a
+
+If the player doesn't load, [download the video](docs/media/replayr-walkthrough.mp4) instead.
 
 ## Get started
 

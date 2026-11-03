@@ -2,7 +2,7 @@
 
 This guide takes you from a fresh install to your first record sent to an outside system. It's written for Salesforce admins, and you don't need to write any code. Allow about 30 minutes.
 
-**Prefer to watch?** The [video walkthrough](media/replayr-walkthrough.mp4) follows these exact steps in a fresh org.
+**Prefer to watch?** The [video walkthrough](https://github.com/user-attachments/assets/6ac85819-7c89-4524-b27f-886566c71f4a) follows these exact steps in a fresh org. You can also [download it](media/replayr-walkthrough.mp4).
 
 The examples use **httpbin.org**, a free public test API that simply echoes back whatever it receives. Swap in your own system's details when you set up a real integration.
 
